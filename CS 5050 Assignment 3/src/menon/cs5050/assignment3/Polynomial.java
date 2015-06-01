@@ -16,18 +16,62 @@ public class Polynomial {
 	 * Multiply using naive algorithm
 	 * @param multipleWith
 	 * @return a polynomial representing the product of this one and the parameter
+	 * @throws Exception 
 	 */
-	public Polynomial naiveMultiply(Polynomial multipleWith) {
-		return null;
+	public Polynomial naiveMultiply(Polynomial multiplier) throws Exception {
+		
+		if (this.coefficients.length != multiplier.length()) {
+			throw new Exception("Can only multiply a polynomial with " + this.coefficients.length + " coefficients.");
+		}
+		
+		double[] product = new double[2 * this.coefficients.length];
+		
+		//Multiply the two polynomials
+		for (int multiplicandIndex = 0; multiplicandIndex < this.coefficients.length; ++multiplicandIndex) {
+			for (int multiplierIndex = 0; multiplierIndex < multiplier.length(); ++multiplierIndex) {
+				product[multiplicandIndex + multiplierIndex] += this.coefficients[multiplicandIndex] * multiplier.at(multiplierIndex);
+			}
+		}
+		
+		return new Polynomial(product);
 	}
 	
 	/**
 	 * Multiply using Karatsuba algorithm
 	 * @param multipleWith
 	 * @return a polynomial representing the product of this one and the parameter
+	 * @throws Exception 
 	 */
-	public Polynomial karatsubaMultiply(Polynomial multipleWith) {
-		return null;
+	public Polynomial karatsubaMultiply(Polynomial multiplier) throws Exception {
+		
+		if (this.coefficients.length != multiplier.length()) {
+			throw new Exception("Can only multiply a polynomial with " + this.coefficients.length + " coefficients.");
+		}
+		
+		double[] product = new double[2 * this.coefficients.length];
+		
+		
+		
+		
+		
+		
+		return new Polynomial(product);
+	}
+	
+	public double at(int index) throws Exception {
+		
+		if (index >= this.coefficients.length) {
+			throw new Exception("Index " + index + " is outside the coefficients for " + this.toString() + ".");
+		}
+		
+		return this.coefficients[index];
+	}
+	
+	/**
+	 * @return the number of coefficients
+	 */
+	public int length() {
+		return this.coefficients.length;
 	}
 	
 	/* (non-Javadoc)
