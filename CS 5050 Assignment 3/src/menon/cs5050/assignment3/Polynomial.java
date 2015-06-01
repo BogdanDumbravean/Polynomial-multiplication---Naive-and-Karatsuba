@@ -48,14 +48,69 @@ public class Polynomial {
 			throw new Exception("Can only multiply a polynomial with " + this.coefficients.length + " coefficients.");
 		}
 		
-		double[] product = new double[2 * this.coefficients.length];
+		return new Polynomial(karatsubaMultiplyRecursive(this.coefficients, multiplier.coefficients));
 		
+	}
+	
+	/**
+	 * @param multiplier
+	 * @return array of doubles containing coefficients of the product with the multiplier
+	 */
+	private double[] karatsubaMultiplyRecursive(double[] multiplicand, double[] multiplier) {
+
+		double[] product = new double[2 * multiplicand.length];
+
+		//Handle the base case where the polynomial has only one coefficient
+		if (multiplicand.length == 1) {
+			product[0] = multiplicand[0] * multiplier[0];
+			return product;
+		}
 		
+		int halfArraySize = multiplicand.length / 2;
+
+		//Declare arrays to hold halved factors
+		double[] multiplicandLow = new double[halfArraySize];
+		double[] multiplicandHigh = new double[halfArraySize];
+		double[] multipliplierLow = new double[halfArraySize];
+		double[] multipliierHigh = new double[halfArraySize];
+
+		double[] multiplicandLowHigh = new double[halfArraySize];
+		double[] multipliplierLowHigh = new double[halfArraySize];
+
+		//Fill in the low and high arrays
+		for (int halfSizeIndex = 0; halfSizeIndex < halfArraySize; ++halfSizeIndex) {
+			
+			multiplicandLow[halfSizeIndex] = multiplicand[halfSizeIndex];
+			multiplicandHigh[halfSizeIndex] = multiplicand[halfSizeIndex + halfArraySize];
+			multiplicandLowHigh[halfSizeIndex] = multiplicandLow[halfSizeIndex] + multiplicandHigh[halfSizeIndex];
+			
+			multipliplierLow[halfSizeIndex] = multiplier[halfSizeIndex];
+			multipliierHigh[halfSizeIndex] = multiplier[halfSizeIndex + halfArraySize];
+			multipliplierLowHigh[halfSizeIndex] = multipliplierLow[halfSizeIndex] + multipliierHigh[halfSizeIndex];
+			
+		}
 		
+		//Recursively call method on smaller arrays and construct the low and high parts of the product
+		double[] productLow = karatsubaMultiplyRecursive(multiplicandLow, multipliplierLow);
+		double[] productHigh = karatsubaMultiplyRecursive(multiplicandHigh, multipliierHigh);
 		
+		double[] productLowHigh = karatsubaMultiplyRecursive(multiplicandLowHigh, multipliplierLowHigh);
 		
+		//Construct the middle portion of the product
+		double[] productMiddle = new double[halfArraySize];
+		for (int halfSizeIndex = 0; halfSizeIndex < halfArraySize; ++halfSizeIndex) {
+			productMiddle[halfSizeIndex] = productLowHigh[halfSizeIndex] - productLow[halfSizeIndex] - productHigh[halfSizeIndex];
+		}
 		
-		return new Polynomial(product);
+		//Assemble the product from the low, middle and high parts. Start with the low and high parts of the product.
+		for (int halfSizeIndex = 0, middleOffset = halfArraySize / 2; halfSizeIndex < halfArraySize; ++halfSizeIndex) {
+			product[halfSizeIndex] = productLow[halfSizeIndex];
+			product[halfSizeIndex + halfArraySize] = productHigh[halfSizeIndex];
+			product[halfSizeIndex + middleOffset] += productMiddle[halfSizeIndex];
+		}
+		
+		return product;
+		
 	}
 	
 	public double at(int index) throws Exception {
