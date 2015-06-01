@@ -5,11 +5,22 @@ public class PolynomialClient {
 	public static void main(String[] args) {
 		
 		try {
-			Polynomial polynomial = new Polynomial(new double[]{1.0, 2.0});
-			System.out.println(polynomial.toString());
 			
-			Polynomial product = polynomial.naiveMultiply(new Polynomial(new double[]{3.0, 4.0}));
-			System.out.print("The product is ");
+			double[] polynomial1Array = new double[]{1.0, 2.0, 3.0, 4.0};
+			double[] polynomial2Array = new double[]{5.0, 6.0, 7.0, 8.0};
+			
+			Polynomial multiplicand = new Polynomial(polynomial1Array);
+			Polynomial multipliplier = new Polynomial(polynomial2Array);
+			
+			System.out.println("Muliplicand: " + multiplicand.toString());
+			System.out.println("Muliplier: " + multipliplier.toString());
+			
+			Polynomial product = multiplicand.naiveMultiply(multipliplier);
+			System.out.print("The product with the naive algorithm is ");
+			System.out.println(product.toString());
+			
+			product = multiplicand.karatsubaMultiply(multipliplier);
+			System.out.print("The product with the Karatsuba algorithm is ");
 			System.out.println(product.toString());
 			
 		} catch (Exception e) {

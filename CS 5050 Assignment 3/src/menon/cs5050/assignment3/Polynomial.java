@@ -97,15 +97,15 @@ public class Polynomial {
 		double[] productLowHigh = karatsubaMultiplyRecursive(multiplicandLowHigh, multipliplierLowHigh);
 		
 		//Construct the middle portion of the product
-		double[] productMiddle = new double[halfArraySize];
-		for (int halfSizeIndex = 0; halfSizeIndex < halfArraySize; ++halfSizeIndex) {
+		double[] productMiddle = new double[multiplicand.length];
+		for (int halfSizeIndex = 0; halfSizeIndex < multiplicand.length; ++halfSizeIndex) {
 			productMiddle[halfSizeIndex] = productLowHigh[halfSizeIndex] - productLow[halfSizeIndex] - productHigh[halfSizeIndex];
 		}
 		
 		//Assemble the product from the low, middle and high parts. Start with the low and high parts of the product.
-		for (int halfSizeIndex = 0, middleOffset = halfArraySize / 2; halfSizeIndex < halfArraySize; ++halfSizeIndex) {
-			product[halfSizeIndex] = productLow[halfSizeIndex];
-			product[halfSizeIndex + halfArraySize] = productHigh[halfSizeIndex];
+		for (int halfSizeIndex = 0, middleOffset = multiplicand.length / 2; halfSizeIndex < multiplicand.length; ++halfSizeIndex) {
+			product[halfSizeIndex] += productLow[halfSizeIndex];
+			product[halfSizeIndex + multiplicand.length] += productHigh[halfSizeIndex];
 			product[halfSizeIndex + middleOffset] += productMiddle[halfSizeIndex];
 		}
 		
