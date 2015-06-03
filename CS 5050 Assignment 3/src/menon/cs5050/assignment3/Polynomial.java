@@ -37,6 +37,78 @@ public class Polynomial {
 	}
 	
 	/**
+	 * Multiply using divide and conquer that generates 4 sub-problems
+	 * @param multiplier
+	 * @return
+	 * @throws Exception
+	 */
+	public Polynomial divideAndConquereMultiply(Polynomial multiplier) throws Exception {
+		
+		if (this.coefficients.length != multiplier.length()) {
+			throw new Exception("Can only multiply a polynomial with " + this.coefficients.length + " coefficients.");
+		}
+		
+		return new Polynomial(divideAndConquereMultiply(this.coefficients, multiplier.coefficients));
+		
+	}
+	
+	/**
+	 * @param multiplier
+	 * @return array of doubles containing coefficients of the product with the multiplier
+	 */
+	private double[] divideAndConquereMultiply(double[] multiplicand, double[] multiplier) throws Exception {
+
+		double[] product = new double[2 * multiplicand.length];
+
+		//Handle the base case where the polynomial has only one coefficient
+		if (multiplicand.length == 1) {
+			product[0] = multiplicand[0] * multiplier[0];
+			return product;
+		}
+		
+		int halfArraySize = multiplicand.length / 2;
+
+		//Declare arrays to hold halved factors
+		double[] multiplicandLow = new double[halfArraySize];
+		double[] multiplicandHigh = new double[halfArraySize];
+		double[] multipliplierLow = new double[halfArraySize];
+		double[] multiplierHigh = new double[halfArraySize];
+
+		//Fill in the low and high arrays
+		for (int halfSizeIndex = 0; halfSizeIndex < halfArraySize; ++halfSizeIndex) {
+			
+			multiplicandLow[halfSizeIndex] = multiplicand[halfSizeIndex];
+			multiplicandHigh[halfSizeIndex] = multiplicand[halfSizeIndex + halfArraySize];
+			
+			multipliplierLow[halfSizeIndex] = multiplier[halfSizeIndex];
+			multiplierHigh[halfSizeIndex] = multiplier[halfSizeIndex + halfArraySize];
+			
+		}
+		
+		//Recursively call method on smaller arrays and construct the low and high parts of the product
+		double[] productLow = divideAndConquereMultiply(multiplicandLow, multipliplierLow);//good
+		double[] productHigh = divideAndConquereMultiply(multiplicandHigh, multiplierHigh);//good
+		double[] multiplicandLowMultiplierHigh = divideAndConquereMultiply(multiplicandLow, multiplierHigh);
+		double[] multiplicandHighMultiplierLow = divideAndConquereMultiply(multiplicandHigh, multipliplierLow);
+				
+		//Construct the middle portion of the product
+		double[] productMiddle = new double[multiplicand.length];
+		for (int halfSizeIndex = 0; halfSizeIndex < multiplicand.length; ++halfSizeIndex) {
+			productMiddle[halfSizeIndex] = multiplicandLowMultiplierHigh[halfSizeIndex] + multiplicandHighMultiplierLow[halfSizeIndex];
+		}
+		
+		//Assemble the product from the low, middle and high parts.
+		for (int halfSizeIndex = 0, middleOffset = multiplicand.length / 2; halfSizeIndex < multiplicand.length; ++halfSizeIndex) {
+			product[halfSizeIndex] += productLow[halfSizeIndex];
+			product[halfSizeIndex + multiplicand.length] += productHigh[halfSizeIndex];
+			product[halfSizeIndex + middleOffset] += productMiddle[halfSizeIndex];
+		}
+		
+		return product;
+		
+	}
+	
+	/**
 	 * Multiply using Karatsuba algorithm
 	 * @param multipleWith
 	 * @return a polynomial representing the product of this one and the parameter
