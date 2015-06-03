@@ -18,8 +18,12 @@ public class PolynomialClient {
 	public static final String OUTPUT_FILE = "output.txt";
 	public static final String DEBUG_ON = "Y";
 	public static final int START_POLYNOMIAL_ARRAY_SIZE_EXPONENT = 5;
-	public static final int NUMBER_OF_ITERATIONS = 20;
+	public static final int NUMBER_OF_ITERATIONS = 11;
 	
+	/**
+	 * Constructor
+	 * @param debugOn
+	 */
 	public PolynomialClient(boolean debugOn) {
 		this.randomDoubleGenerator = new Random(2038905);
 		try {
@@ -51,11 +55,14 @@ public class PolynomialClient {
 		
 	}
 	
+	/**
+	 * Run polynomial multiplication for logarithmically increasing sizes and print run time statistics.
+	 */
 	private void collectMultiplicationStatistics() {
 		
 		double[] polynomialArray1 = null, polynomialArray2 = null;
 		
-		for (int polynomialArraySizeExponent = 5, iterationCounter = 0; iterationCounter < NUMBER_OF_ITERATIONS; ++polynomialArraySizeExponent, ++iterationCounter) {
+		for (int polynomialArraySizeExponent = START_POLYNOMIAL_ARRAY_SIZE_EXPONENT, iterationCounter = 0; iterationCounter < NUMBER_OF_ITERATIONS; ++polynomialArraySizeExponent, ++iterationCounter) {
 		
 			polynomialArray1 = getPolynomialArray(polynomialArraySizeExponent);
 			polynomialArray2 = getPolynomialArray(polynomialArraySizeExponent);
@@ -131,6 +138,11 @@ public class PolynomialClient {
 
 	}
 	
+	/**
+	 * Write log into output file if debug flag is set on
+	 * @param logText
+	 * @param newLine
+	 */
 	private void log(String logText, boolean newLine) {
 		
 		if (this.debugOn) {
@@ -142,6 +154,9 @@ public class PolynomialClient {
 		}
 	}
 	
+	/**
+	 * Print run time statistics in R script format for ease of graphing
+	 */
 	private void printRunTimeStatistics() {
 		
 		boolean firstTime = true;
